@@ -1,13 +1,12 @@
 {
   "name": "",
   "version": "0.0.1",
-  "description": "",
+  "description": "demo app for Almazov center",
   "main": "webpack.config.js",
-  "author": "soylent-grin",
+  "author": "semiotproject",
   "license": "WTFPL",
   "scripts": {
     "clean": "rm -rf ./dist",
-    "storybook": "start-storybook -p 9001",
     "webpack": "./node_modules/.bin/webpack --config ./webpack.config.js --output-pathinfo",
     "webpack-dev-server": "./node_modules/.bin/webpack-dev-server --config ./webpack.config.js --hot --inline --progress",
     "dev": "npm run clean && NODE_ENV=development npm run webpack-dev-server",
