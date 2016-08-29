@@ -10,8 +10,8 @@
     "storybook": "start-storybook -p 9001",
     "webpack": "./node_modules/.bin/webpack --config ./webpack.config.js --output-pathinfo",
     "webpack-dev-server": "./node_modules/.bin/webpack-dev-server --config ./webpack.config.js --hot --inline --progress",
-    "dev": "npm run clean && NODE_ENV=development npm run webpack-dev-server -- --app main",
-    "prod": "npm run clean && NODE_ENV=production npm run webpack -- --app main"
+    "dev": "npm run clean && NODE_ENV=development npm run webpack-dev-server",
+    "prod": "npm run clean && NODE_ENV=production npm run webpack"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",
@@ -35,6 +35,7 @@
     "html-webpack-plugin": "^2.15.0",
     "jade": "^1.11.0",
     "jade-loader": "^0.8.0",
+    "json-loader": "^0.5.4",
     "less": "^2.6.1",
     "less-loader": "^2.2.3",
     "open-browser-webpack-plugin": "0.0.2",
@@ -48,7 +49,9 @@
     "yargs": "^4.4.0"
   },
   "dependencies": {
+    "autobahn": "^0.10.1",
     "axios": "^0.11.1",
-    "bluebird": "^3.4.1"
+    "bluebird": "^3.4.1",
+    "lodash": "^4.15.0"
   }
 }

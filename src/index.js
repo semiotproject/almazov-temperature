@@ -5,7 +5,7 @@ import List from './components/list';
 
 ReactDOM.render(
     <Router history={browserHistory}>
-        <Route path="/main/">
+        <Route path="/">
             <IndexRoute component={Main}/>
             <Route path="list" component={List} />
         </Route>

@@ -3,6 +3,7 @@
 
 html {
     font-family: 'Roboto', sans-serif;
+    color: rgba(255,255,255,.75);
 }
 
 html,
@@ -16,6 +17,15 @@ body,
     margin: 0;
 }
 
+.banner {
+    text-align: center;
+    position: relative;
+    top: 50%;
+    font-size: 20px;
+    font-weight: 200;
+    font-style: italic;
+}
+
 #root {
     background-image: url(http://www.freebiesgallery.com/wp-content/uploads/2014/02/blurred-background-19.jpg);
     background-size: cover;
@@ -27,7 +37,6 @@ h3 {
     left: 0;
     right: 0;
     font-size: 20px;
-    color: rgba(255,255,255,.75);
 }
 
 .overall-mixin(@color, @offset: 0px) {
@@ -38,15 +47,16 @@ h3 {
     }
 }
 
+a {
+    color: rgba(255,255,255,.75);
+}
+
 .overall {
     padding-top: 20px;
     text-align: center;
     top: 50%;
     position: relative;
     transform: translateY(-50%);
-    a {
-        color: rgba(255,255,255,.75);
-    }
     div {
         display: inline-block;
         width: 20%;
@@ -82,23 +92,42 @@ h3 {
 }
 
 .list {
+    height: 100%;
+    overflow: auto !important;
+    a {
+        padding: 10px;
+        display: inline-block;
+    }
     table {
-        border: 1px solid #cbcbcb;
+        box-shadow: 1px 1px 2px rgba(0,0,0,.3);
         margin: 20px auto;
         border-collapse: collapse;
         thead {
-            border-bottom: 1px solid #cbcbcb;
+            // border-bottom: 1px solid #cbcbcb;
         }
         tr {
             > * {
-                padding: 5px;
+                padding: 10px 40px 10px 20px;
+            }
+            &:nth-child(odd) {
+                td {
+                    background-color: rgba(0,0,0,.15);
+                }
+            }
+            &:hover {
+                td {
+                    background-color: rgba(0,0,0,.3);   
+                    color: #e2e2e2;
+                }
             }
         }
         th,
         td {
-            border-left: 1px solid #cbcbcb;
-            border-bottom: 1px solid #cbcbcb;
+            // border-left: 1px solid #cbcbcb;
+            // border-bottom: 1px solid #cbcbcb;
             text-align: left;
+            background-color: rgba(0,0,0,.1);
+            transition: all .1s ease-in-out;
         }
     }
 }

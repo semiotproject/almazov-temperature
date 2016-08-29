@@ -4,11 +4,12 @@ import api from '../api';
 class SystemStore extends EventEmitter {
     constructor(...args) {
         super(...args);
+        this._data = [];
+        this.subscribe();
     }
     load() {
         return api.load().then((res) => {
             this._data = res;
-            this.subscribe();
             return res;
         });
     }
@@ -17,6 +18,7 @@ class SystemStore extends EventEmitter {
             this._data.forEach((d, index) => {
                 if (d.room === room) {
                     console.info(`updating room ${room} to ${temperature}`);
+                    this._data[index].prevTemperature = this._data[index].temperature;
                     this._data[index].temperature = temperature;
                     this.emit('update');
                 }

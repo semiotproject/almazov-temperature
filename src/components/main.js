@@ -1,4 +1,6 @@
 import SystemStore from '../stores/systems-store';
+import api from '../api/';
+
 const { Link } = ReactRouter;
 
 require('../css/main.less');
@@ -8,6 +10,7 @@ export default class Main extends React.Component {
         super();
         this.state = {
             isLoading: true,
+            authenticationError: false,
             data: []
         };
 
@@ -19,13 +22,20 @@ export default class Main extends React.Component {
     }
 
     componentDidMount() {
-        SystemStore.load().then((res) => {
+        api.authenticate().then(() => {
+            SystemStore.load().then((res) => {
+                this.setState({
+                    isLoading: false,
+                    data: res
+                });
+            });
+            SystemStore.on('update', this.handleUpdate);
+        }, () => {
             this.setState({
-                isLoading: false,
-                data: res
+                authenticationError: true,
+                isLoading: false
             });
         });
-        SystemStore.on('update', this.handleUpdate);
     }
     componentWillUnmount() {
         SystemStore.removeListener('update', this.handleUpdate);
@@ -68,24 +78,29 @@ export default class Main extends React.Component {
     }
 
     render() {
-        const { data, isLoading } = this.state;
-        console.log(data);
-        return !isLoading && (
+        const { data, isLoading, authenticationError } = this.state;
+        if (isLoading) {
+            return <div className="banner"><img src={require("../img/preloader.svg")} alt="загрузка"/></div>;
+        }
+        if (authenticationError) {
+            return <div className="banner">Ошибка авторизации</div>;
+        }
+        return (
             <div className="overall-wrapper">
                 <h3>Температура в здании</h3>
                 <div className="overall">
-                    <Link to="/main/list?param=temperature&asc=true">
+                    <Link to="/list?param=temperature&asc=true">
                         <div className="overall__min">
                             {this.renderMin(data)}
                         </div>
                     </Link>
-                    <Link to="/main/list?param=room&desc=true">
+                    <Link to="/list?param=room&desc=true">
                         <div className="overall__average">
                             {this.renderAverage(data)} {String.fromCharCode("8451")}
                             <label>средняя температура</label>
                         </div>
                     </Link>
-                    <Link to="/main/list?param=temperature&desc=true">
+                    <Link to="/list?param=temperature&desc=true">
                         <div className="overall__max">
                             {this.renderMax(data)}
                         </div> 

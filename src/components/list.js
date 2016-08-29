@@ -21,18 +21,22 @@ export default class List extends React.Component {
     }
 
     sortBy(data, param, direction) {
-        console.log(arguments);
         const correction = direction === "asc" ? 1 : -1;
         return data.sort((a, b) => {
             return correction * (a[param] > b[param] ? 1 : -1);
         });
+    }
+    renderDynamic(d) {
+        if (d.prevTemperature) {
+            return d.temperature - d.prevTemperature > 0 ? String.fromCharCode("8593") : String.fromCharCode("8595");
+        }
     }
 
     render() {
         const { param, asc } = this.props.location.query;
         return (
             <div className="list">
-                <Link to="/main/">Назад</Link>
+                <Link to="/">Назад</Link>
                 <table>
                     <thead>
                         <tr>
@@ -49,8 +53,8 @@ export default class List extends React.Component {
                             ).map((d) => {
                                 return (
                                     <tr>
-                                        <th>{d.room}</th>
-                                        <th>{d.temperature}</th>
+                                        <td>{d.room}</td>
+                                        <td>{d.temperature} {this.renderDynamic(d)}</td>
                                     </tr>
                                 );
                             })

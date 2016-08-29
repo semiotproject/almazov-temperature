@@ -9,22 +9,11 @@ var WebpackErrorNotificationPlugin = require('webpack-error-notification');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var BUILD_CONFIG = {
-    entryPoints: {
-        main: [
-            // you may add any entry point in this place
-            'main'
-        ]
-    },
     devServerPort: 8181,
     distDir: 'dist', // default dir
     srcDir: 'src',
-    production: process.env.NODE_ENV === "production",
-    app: argv.app
+    production: process.env.NODE_ENV === "production"
 };
-
-if (!BUILD_CONFIG.entryPoints[BUILD_CONFIG.app]) {
-    throw new Error(`not found application ${BUILD_CONFIG.app}; do nothing`);
-}
 
 var DEFAULT_HOSTNAME = 'localhost';
 
@@ -37,7 +26,7 @@ if (targetHost === DEFAULT_HOSTNAME && !BUILD_CONFIG.production) {
     console.log('*****');
     console.log('*****');
 }
-console.log(`Buiding app ${BUILD_CONFIG.app} in ${BUILD_CONFIG.production ? 'production' : 'development'} mode to ${BUILD_CONFIG.distDir}; target host is ${targetHost}`);
+console.log(`Buiding app in ${BUILD_CONFIG.production ? 'production' : 'development'} mode to ${BUILD_CONFIG.distDir}; target host is ${targetHost}`);
 
 
 var WEBPACK_CONFIG = {
@@ -46,7 +35,7 @@ var WEBPACK_CONFIG = {
     context: path.join(__dirname, BUILD_CONFIG.srcDir),
 
     // JS entries to bundle; see below
-    entry: {},
+    entry: "./index.js",
 
     // how to process source maps (for production - separate file, does not load when devtool panel is closed)
     devtool: BUILD_CONFIG.production ? "source-map" : "cheap-module-eval-source-map",
@@ -61,7 +50,7 @@ var WEBPACK_CONFIG = {
         pathinfo: !BUILD_CONFIG.production,
 
         // bundle file name pattern
-        filename: '[name]/index.js',
+        filename: './index.js',
 
         // destination directory
         path: path.join(__dirname, BUILD_CONFIG.distDir),
@@ -104,11 +93,7 @@ var WEBPACK_CONFIG = {
 
     // set how `require('module')` should interpret 'module'
     resolve: {
-        extensions: ['', '.js'],
-        alias: {
-            dry: path.join(__dirname, BUILD_CONFIG.srcDir, 'dry'),
-            common: path.join(__dirname, BUILD_CONFIG.srcDir, 'common')
-        }
+        extensions: ['', '.js']
     },
 
     // list of webpack plugins
@@ -120,19 +105,14 @@ var WEBPACK_CONFIG = {
         // using to build-time variable declaration
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': `"${BUILD_CONFIG.production ? "production" : "development"}"`
+        }),
+
+        new HtmlWebpackPlugin({
+            filename: './index.html',
+            template: './index.html',
+            inject: false
         })
     ].concat(
-
-        // for each entry point also bundle it's index.jade
-        BUILD_CONFIG.entryPoints[BUILD_CONFIG.app].map((e) => {
-            return new HtmlWebpackPlugin({
-                filename: './' + path.join(e, 'index.html'),
-                template: './' + path.join(e, 'index.html'),
-                inject: false
-            });
-        })
-
-    ).concat(
 
         BUILD_CONFIG.production ?
             [
@@ -175,12 +155,5 @@ var WEBPACK_CONFIG = {
         }
     }
 };
-
-// this is used to allow nested path to bundles (e. g. file is `index.js`, but path is `/apkbg/admin/index.js`)
-BUILD_CONFIG.entryPoints[BUILD_CONFIG.app].map((e) => {
-    WEBPACK_CONFIG.entry[e] = [
-        './' + path.join(e, 'index.js')
-    ];
-});
 
 module.exports = WEBPACK_CONFIG;
