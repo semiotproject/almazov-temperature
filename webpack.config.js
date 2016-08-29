@@ -56,7 +56,7 @@ var WEBPACK_CONFIG = {
         path: path.join(__dirname, BUILD_CONFIG.distDir),
 
         // makes sense when assets are located in subpath (e. g. `/assest/`)
-        publicPath: BUILD_CONFIG.production ? '/' : 'http://' + targetHost + ':' + BUILD_CONFIG.devServerPort + '/'
+        publicPath: BUILD_CONFIG.production ? '/almazov-temperature/' : 'http://' + targetHost + ':' + BUILD_CONFIG.devServerPort + '/almazov-temperature/'
     },
 
     // how to handle different `require()` file types

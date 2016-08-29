@@ -1,5 +1,6 @@
 import SystemStore from '../stores/systems-store';
 import api from '../api/';
+import CONFIG from '../config';
 
 const { Link } = ReactRouter;
 
@@ -89,18 +90,18 @@ export default class Main extends React.Component {
             <div className="overall-wrapper">
                 <h3>Температура в здании</h3>
                 <div className="overall">
-                    <Link to="/list?param=temperature&asc=true">
+                    <Link to={CONFIG.baseURL + "list?param=temperature&asc=true"}>
                         <div className="overall__min">
                             {this.renderMin(data)}
                         </div>
                     </Link>
-                    <Link to="/list?param=room&desc=true">
+                    <Link to={CONFIG.baseURL + "list?param=room&desc=true"}>
                         <div className="overall__average">
                             {this.renderAverage(data)} {String.fromCharCode("8451")}
                             <label>средняя температура</label>
                         </div>
                     </Link>
-                    <Link to="/list?param=temperature&desc=true">
+                    <Link to={CONFIG.baseURL + "list?param=temperature&desc=true"}>
                         <div className="overall__max">
                             {this.renderMax(data)}
                         </div> 

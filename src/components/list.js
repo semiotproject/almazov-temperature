@@ -1,4 +1,6 @@
 import SystemStore from '../stores/systems-store';
+import CONFIG from '../config';
+
 const { Link } = ReactRouter;
 
 export default class List extends React.Component {
@@ -36,7 +38,7 @@ export default class List extends React.Component {
         const { param, asc } = this.props.location.query;
         return (
             <div className="list">
-                <Link to="/">Назад</Link>
+                <Link to={CONFIG.baseURL}>Назад</Link>
                 <table>
                     <thead>
                         <tr>
