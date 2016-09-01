@@ -7,6 +7,14 @@ class SystemStore extends EventEmitter {
         this._data = [];
         this.subscribe();
     }
+    authenticate() {
+        return api.authenticate().then((res) => {
+            console.info(`successfully authenticated`);
+        }, (res) => {
+            console.error(`failed to authenticate`);
+            this._authError = true;
+        });
+    }
     load() {
         return api.load().then((res) => {
             this._data = res;

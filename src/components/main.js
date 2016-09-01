@@ -10,9 +10,9 @@ export default class Main extends React.Component {
     constructor() {
         super();
         this.state = {
-            isLoading: true,
-            authenticationError: false,
-            data: []
+            isLoading: false,
+            authenticationError: SystemStore.authError,
+            data: SystemStore.getData()
         };
 
         this.handleUpdate = () => {
@@ -23,20 +23,7 @@ export default class Main extends React.Component {
     }
 
     componentDidMount() {
-        api.authenticate().then(() => {
-            SystemStore.load().then((res) => {
-                this.setState({
-                    isLoading: false,
-                    data: res
-                });
-            });
-            SystemStore.on('update', this.handleUpdate);
-        }, () => {
-            this.setState({
-                authenticationError: true,
-                isLoading: false
-            });
-        });
+        SystemStore.on('update', this.handleUpdate);
     }
     componentWillUnmount() {
         SystemStore.removeListener('update', this.handleUpdate);
