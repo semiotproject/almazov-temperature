@@ -1,4 +1,13 @@
-const platformHost = "demo.semiot.ru";
+import queryString from 'query-string';
+
+let platformHost;
+
+const search = queryString.parse(location.search);
+if (search.platform) {
+    platformHost = decodeURIComponent(search.platform);
+} else {
+    platformHost = "demo.semiot.ru";
+}
 
 export default {
     platformHost,
