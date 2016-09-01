@@ -38,7 +38,7 @@ var WEBPACK_CONFIG = {
     entry: "./index.js",
 
     // how to process source maps (for production - separate file, does not load when devtool panel is closed)
-    devtool: BUILD_CONFIG.production ? "source-map" : "cheap-module-eval-source-map",
+    devtool: "source-map",
 
     // turn on watch mode
     watch: !BUILD_CONFIG.production,

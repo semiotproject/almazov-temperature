@@ -4,7 +4,7 @@ import CONFIG from '../config';
 import parser from '../parsers/';
 import _ from 'lodash';
 
-const DEBUG = true;
+const DEBUG = false;
 
 let wampConnection = null;
 
@@ -22,7 +22,7 @@ const load = (conf) => {
         }
     });
 };
-const post = (conf) => {
+const post = (url, data) => {
     if (DEBUG) {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
@@ -30,7 +30,7 @@ const post = (conf) => {
             }, 1000);
         });
     }
-    return axios(conf.url, conf.data, {
+    return axios.post(url, data, {
         headers: {
             'Content-Type': 'application/json'
         }
@@ -65,7 +65,7 @@ export default {
         const { user, password } = CONFIG.platformCredentials;
         console.info(`authenticating; user is ${user}, password is ${password}`);
         return post(CONFIG.authenticationURL, {
-            user,
+            username: user,
             password
         }).then((res) => {
             console.info(`authentication succeeded; cookie is ${res}`);
@@ -80,8 +80,8 @@ export default {
                 url: CONFIG.systemsURL,
                 response: generateSystems()
             }).then((res) => {
-                console.info(`raw systems: `, res);
-                return parser.parseSystems(res);
+                console.info(`raw systems: `, res.data);
+                return parser.parseSystems(res.data);
             }).then((systems) => {
                 console.info(`parsed systems: `, systems, `; loading observations..`);
                 load({
@@ -116,7 +116,7 @@ export default {
         });
         wampConnection.onopen = function (session) {
            session.subscribe(`${CONFIG.observationsTopic}`, () => {
-    
+
            });
         };
         wampConnection.open();
