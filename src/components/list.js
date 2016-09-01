@@ -56,7 +56,7 @@ export default class List extends React.Component {
                                 return (
                                     <tr>
                                         <td>{d.room}</td>
-                                        <td>{d.temperature} {this.renderDynamic(d)}</td>
+                                        <td>{d.temperature || "неизвестно"} {this.renderDynamic(d)}</td>
                                     </tr>
                                 );
                             })

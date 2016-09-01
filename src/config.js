@@ -1,4 +1,4 @@
-const platformHost = "test.semiot.ru";
+const platformHost = "demo.semiot.ru";
 
 export default {
     platformHost,

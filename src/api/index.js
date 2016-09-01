@@ -18,8 +18,10 @@ const load = (conf) => {
     }
     return axios(conf.url, {
         headers: {
-            'Content-Type': 'application/json'
+            'Accept': 'application/json'
         }
+    }).then((res) => {
+        return res.data;
     });
 };
 const post = (url, data) => {
@@ -80,28 +82,43 @@ export default {
                 url: CONFIG.systemsURL,
                 response: generateSystems()
             }).then((res) => {
-                console.info(`raw systems: `, res.data);
-                return parser.parseSystems(res.data);
+                return parser.parseSystems(res);
             }).then((systems) => {
-                console.info(`parsed systems: `, systems, `; loading observations..`);
-                load({
-                    url: CONFIG.observationsURL,
-                    response: generateObservations()
-                }).then((res) => {
-                    console.info(`raw observations: `, res);
-                    return parser.parseObservations(res);
-                }).then((obs) => {
-                    console.info(`parsed observations: `, obs, '; all data is loaded');
-                    const combinedData = systems.map((s) => {
-                        return _.assign(s, {
-                            temperature: (_.find(obs, (o) => {
-                                return o.room === s.room;
-                            })).temperature
-                        })
-                    });
-                    resolve(combinedData);
+                console.info(`parsed systems: `, systems, `; loading detail information..`);
+                Promise.all(
+                    systems.map(this.loadDetail.bind(this))
+                ).then((res) => {
+                    console.info(`all data loaded; awesome!`, res);
+                    resolve(res);
                 })
             });
+        });
+    },
+    loadDetail(s) {
+        return new Promise((resolve, reject) => {
+            load({
+                url: s.uri
+            }).then((system) => {
+                console.info(`loaded detail info about ${s.uri}; loading temperature sensor..`);
+                const parsedSystem = parser.parseSystem(system);
+                load({
+                    url: parsedSystem.temperatureSensorUri
+                }).then((sensor) => {
+                    return parser.parseSensor(sensor);
+                }).then((parsedSensor) => {
+                    load({
+                        url: parsedSensor["apidoc:observations"]
+                    }).then((observation) => {
+                        return parser.parseObservation(observation);
+                    }).then((parsedObservation) => {
+                        resolve({
+                            room: parsedSystem.room,
+                            topic: parsedSensor.wampTopic,
+                            temperature: parsedObservation.temperature
+                        });
+                    });
+                })
+            })
         });
     },
     subscribe(callback) {

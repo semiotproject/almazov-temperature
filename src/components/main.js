@@ -47,7 +47,7 @@ export default class Main extends React.Component {
             temperature: Infinity
         };
         data.forEach((d) => {
-            if (d.temperature < min.temperature) {
+            if (d.temperature && d.temperature < min.temperature) {
                 min = d;
             }
         });
@@ -59,20 +59,26 @@ export default class Main extends React.Component {
     }
     renderAverage(data) {
         return (data.reduce((prev, next) => {
-            return prev + next.temperature;
-        }, 0) / data.length).toFixed(2);
+            if (next.temperature) {
+                return prev + next.temperature;
+            } else {
+                return prev;
+            }
+        }, 0) / data.filter((s) => {
+            return s.temperature;
+        }).length).toFixed(2);
     }
     renderMax(data) {
         let max = {
             temperature: -Infinity
         };
         data.forEach((d) => {
-            if (d.temperature > max.temperature) {
+            if (d.temperature && d.temperature > max.temperature) {
                 max = d;
             }
         });
         return [
-            <span>{max.temperature.toFixed(2)} {String.fromCharCode("8451")}</span>,
+            <span>{max.temperature} {String.fromCharCode("8451")}</span>,
             <label>максимальная температура</label>,
             <label>в комнате № {max.room}</label>
         ];
