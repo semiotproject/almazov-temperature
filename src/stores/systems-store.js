@@ -24,11 +24,11 @@ class SystemStore extends EventEmitter {
         });
     }
     subscribe(uri, topic) {
-        api.subscribe(topic, (temperature) => {
+        api.subscribe(topic, ({ temperature }) => {
             this._data.forEach((d, index) => {
                 if (d.uri === uri) {
                     this._data[index].temperature = temperature;
-                    this.trigger("update");
+                    this.emit("update");
                 }
             });
         });
