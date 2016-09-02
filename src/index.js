@@ -1,4 +1,6 @@
-const { Router, IndexRoute, Route, Link, browserHistory } = ReactRouter;
+import { Router, IndexRoute, Route, Link, browserHistory } from 'react-router';
+import ReactDOM from 'react-dom';
+import React from 'react';
 
 import Main from './components/main';
 import List from './components/list';

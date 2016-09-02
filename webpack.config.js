@@ -107,6 +107,10 @@ var WEBPACK_CONFIG = {
             'process.env.NODE_ENV': `"${BUILD_CONFIG.production ? "production" : "development"}"`
         }),
 
+        new CopyWebpackPlugin([
+            { from: 'vendor', to: 'vendor' },
+        ]),
+
         new HtmlWebpackPlugin({
             filename: './index.html',
             template: './index.html',

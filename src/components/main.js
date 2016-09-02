@@ -1,8 +1,10 @@
+import React from 'react';
 import SystemStore from '../stores/systems-store';
 import api from '../api/';
 import CONFIG from '../config';
 
-const { Link } = ReactRouter;
+import { Link } from 'react-router';
+import Header from './header';
 
 require('../css/main.less');
 
@@ -81,7 +83,7 @@ export default class Main extends React.Component {
         }
         return (
             <div className="overall-wrapper">
-                <h3>Температура в здании</h3>
+                <Header />
                 <div className="overall">
                     <Link to={CONFIG.baseURL + "list?param=temperature&asc=true"}>
                         <div className="overall__min">
@@ -97,7 +99,7 @@ export default class Main extends React.Component {
                     <Link to={CONFIG.baseURL + "list?param=temperature&desc=true"}>
                         <div className="overall__max">
                             {this.renderMax(data)}
-                        </div> 
+                        </div>
                     </Link>
                 </div>
             </div>

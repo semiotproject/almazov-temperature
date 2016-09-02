@@ -3,7 +3,6 @@
 
 html {
     font-family: 'Roboto', sans-serif;
-    color: rgba(255,255,255,.75);
 }
 
 html,
@@ -17,6 +16,10 @@ body,
     margin: 0;
 }
 
+a {
+    text-decoration: none;
+}
+
 .banner {
     text-align: center;
     position: relative;
@@ -27,16 +30,21 @@ body,
 }
 
 #root {
-    background-image: url(http://www.freebiesgallery.com/wp-content/uploads/2014/02/blurred-background-19.jpg);
     background-size: cover;
 }
 
-h3 {
-    position: absolute;
-    text-align: center;
-    left: 0;
-    right: 0;
-    font-size: 20px;
+
+.header-wrapper {
+    h2,
+    h3 {
+        text-align: center;
+        color: gray;
+        margin-bottom: 5px;
+    }
+    img {
+        display: block;
+        margin: 0 auto;
+    }
 }
 
 .overall-mixin(@color, @offset: 0px) {
@@ -47,29 +55,23 @@ h3 {
     }
 }
 
-a {
-    color: rgba(255,255,255,.75);
-}
-
 .overall {
     padding-top: 20px;
     text-align: center;
-    top: 50%;
-    position: relative;
-    transform: translateY(-50%);
     div {
         display: inline-block;
         width: 20%;
         text-align: center;
-        font-size: 26px;
-        padding: 40px 0;
+        font-size: 4vw;
+        padding: 40px 20px;
         transition: .1s ease-in-out;
         cursor: pointer;
+        color: white;
     }
     .overall__average {
-        width: 25%;
-        font-size: 40px;
-        padding: 80px 0;
+        width: 35%;
+        font-size: 6vw;
+        padding: 100px 20px;
         .overall-mixin(darken(gray, 20%));
         background: linear-gradient(90deg, @blue, @red);
     }
@@ -87,7 +89,7 @@ a {
         // color: gray;
         text-align: center;
         display: block;
-        font-size: 12px;
+        font-size: 1vw;
     }
 }
 
@@ -96,11 +98,12 @@ a {
     overflow: auto !important;
     a {
         padding: 10px;
-        display: inline-block;
+        text-align: center;
+        display: block;
     }
     table {
         box-shadow: 1px 1px 2px rgba(0,0,0,.3);
-        margin: 20px auto;
+        margin: 0 auto;
         border-collapse: collapse;
         thead {
             // border-bottom: 1px solid #cbcbcb;
@@ -116,7 +119,7 @@ a {
             }
             &:hover {
                 td {
-                    background-color: rgba(0,0,0,.3);   
+                    background-color: rgba(0,0,0,.3);
                     color: #e2e2e2;
                 }
             }
@@ -133,15 +136,50 @@ a {
 }
 
 @media (orientation: portrait) {
+    .header-wrapper {
+        img {
+            height: 150px;
+            width: 150px;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 3vh;
+        }
+        h3 {
+            font-size: 2vh;
+        }
+        margin-bottom: 40px;
+    }
     .overall {
         div {
             display: block;
             margin: 0 auto;
-            width: 40%;
+            font-size: 4vh;
+            width: 70%;
+            padding: 60px 0;
         }
         .overall__average {
-            width: 50%;
             background: linear-gradient(180deg, @blue, @red);
+            font-size: 7vh;
+            width: 90%;
+            padding: 100px 0;
+        }
+        label {
+            font-size: 2vh;
+        }
+    }
+    .list {
+        a {
+            font-size: 3vh;
+            margin-bottom: 1vh;
+        }
+        table {
+            width: 90%;
+            font-size: 3vh;
+            th,
+            td {
+                padding: 3vh;
+            }
         }
     }
 

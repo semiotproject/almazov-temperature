@@ -5,7 +5,6 @@ class SystemStore extends EventEmitter {
     constructor(...args) {
         super(...args);
         this._data = [];
-        this.subscribe();
     }
     authenticate() {
         return api.authenticate().then((res) => {
@@ -18,17 +17,18 @@ class SystemStore extends EventEmitter {
     load() {
         return api.load().then((res) => {
             this._data = res;
+            res.forEach((r) => {
+                this.subscribe(r.uri, r.topic);
+            });
             return res;
         });
     }
-    subscribe() {
-        api.subscribe((room, temperature) => {
+    subscribe(uri, topic) {
+        api.subscribe(topic, (temperature) => {
             this._data.forEach((d, index) => {
-                if (d.room === room) {
-                    console.info(`updating room ${room} to ${temperature}`);
-                    this._data[index].prevTemperature = this._data[index].temperature;
+                if (d.uri === uri) {
                     this._data[index].temperature = temperature;
-                    this.emit('update');
+                    this.trigger("update");
                 }
             });
         });

@@ -38,16 +38,16 @@ export default {
         return s;
     },
     parseObservation(obs) {
+        const parsedObs = {};
+        const hydraOperationRoot = obs["hydra-filter:viewOf"] ? obs["hydra-filter:viewOf"] : obs;
+        const subscriptionOperation = hydraOperationRoot['hydra:operation'];
+        parsedObs.topic = subscriptionOperation['hydra-pubsub:topic'];
         try {
-            return {
-                temperature: obs["hydra:member"][0]["ssn:observationResult"]["ssn:hasValue"]["qudt:quantityValue"]
-            };
+            parsedObs.temperature = obs["hydra:member"][0]["ssn:observationResult"]["ssn:hasValue"]["qudt:quantityValue"];
         } catch (e) {
             console.error(e);
-            return {
-                temperature: null
-            };
         }
+        return parsedObs;
     },
     parseObservationFromWamp(obs) {
         return obs;

@@ -1,13 +1,15 @@
+import React from 'react';
 import SystemStore from '../stores/systems-store';
 import CONFIG from '../config';
 
-const { Link } = ReactRouter;
+import { Link } from 'react-router';
+import Header from './header';
 
 export default class List extends React.Component {
     constructor() {
         super();
         this.state = {
-            
+
         };
 
         this.handleUpdate = () => {
@@ -38,6 +40,7 @@ export default class List extends React.Component {
         const { param, asc } = this.props.location.query;
         return (
             <div className="list">
+                <Header />
                 <Link to={CONFIG.baseURL}>Назад</Link>
                 <table>
                     <thead>

@@ -6,7 +6,37 @@ import _ from 'lodash';
 
 const DEBUG = false;
 
+const { user, password } = CONFIG.platformCredentials;
 let wampConnection = null;
+let wampSession = null;
+const onWampConnectionOpenCallbacks = [];
+
+wampConnection = new autobahn.Connection({
+    url: `wss://${CONFIG.platformHost}/wamp`,
+    realm: 'realm1',
+    authmethods: ["ticket"],
+    authid: user,
+    onchallenge: (session, method, extra) => {
+        if (method === "ticket") {
+            console.info(`authorising on WAMP wit ticket method`);
+            return password;
+        }
+        console.error(`unknown WAMP authentication method '${method}'`);
+    }
+});
+wampConnection.onopen = function(session) {
+    wampSession = session;
+    onWampConnectionOpenCallbacks.map((c) => {
+        c(session);
+    })
+};
+wampConnection.open();
+
+function extractObservationFromWAMPMessage(msg) {
+    return {
+        temperature: parseFloat(msg['ssn:observationResult']['ssn:hasValue']['qudt:quantityValue'])
+    };
+}
 
 const load = (conf) => {
     if (DEBUG) {
@@ -112,8 +142,9 @@ export default {
                         return parser.parseObservation(observation);
                     }).then((parsedObservation) => {
                         resolve({
+                            uri: s.uri,
                             room: parsedSystem.room,
-                            topic: parsedSensor.wampTopic,
+                            topic: parsedObservation.topic,
                             temperature: parsedObservation.temperature
                         });
                     });
@@ -121,23 +152,19 @@ export default {
             })
         });
     },
-    subscribe(callback) {
-        setInterval(() => {
-            callback(Math.ceil(10 * Math.random()), randomTemp());
-        }, 2000);
-        /*
-
-        wampConnection = new autobahn.Connection({
-             url: `wss://${CONFIG.platformHost}/wamp`,
-             realm: 'realm1'
+    subscribe(topic, callback) {
+        this.ensureWampSession((session) => {
+            session.subscribe(topic, (msg) => {
+                console.info(`message received`, msg);
+                callback(extractObservationFromWAMPMessage(JSON.parse(msg[0])));
+            });
         });
-        wampConnection.onopen = function (session) {
-           session.subscribe(`${CONFIG.observationsTopic}`, () => {
-
-           });
-        };
-        wampConnection.open();
-
-        */
     },
+    ensureWampSession(callback) {
+        if (wampSession) {
+            callback(wampSession);
+        } else {
+            onWampConnectionOpenCallbacks.push(callback);
+        }
+    }
 };
