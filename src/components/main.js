@@ -49,7 +49,7 @@ export default class Main extends React.Component {
     renderAverage(data) {
         return (data.reduce((prev, next) => {
             if (next.temperature) {
-                return prev + next.temperature;
+                return prev + parseFloat(next.temperature);
             } else {
                 return prev;
             }

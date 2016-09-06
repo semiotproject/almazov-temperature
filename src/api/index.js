@@ -49,7 +49,7 @@ const load = (conf) => {
         // uncomment this, when IDENTIFICATION_TOKEN (or other selected HTTP header) would be in `Access-Control-Allow-Headers` list
         // headers["IDENTIFICATION_TOKEN"] = IDENTIFICATION_TOKEN;
     }
-    return axios(conf.url, { headers }).then((res) => {
+    return axios(conf.url, { headers, withCredentials: true }).then((res) => {
         return res.data;
     });
 };
