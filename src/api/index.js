@@ -11,6 +11,8 @@ let wampConnection = null;
 let wampSession = null;
 const onWampConnectionOpenCallbacks = [];
 
+let IDENTIFICATION_TOKEN = null;
+
 wampConnection = new autobahn.Connection({
     url: `wss://${CONFIG.platformHost}/wamp`,
     realm: 'realm1',
@@ -39,56 +41,23 @@ function extractObservationFromWAMPMessage(msg) {
 }
 
 const load = (conf) => {
-    if (DEBUG) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(conf.response);
-            }, 1000);
-        });
+    const headers = {
+        'Accept': 'application/json'
+    };
+    if (IDENTIFICATION_TOKEN) {
+        // TODO:
+        // uncomment this, when IDENTIFICATION_TOKEN (or other selected HTTP header) would be in `Access-Control-Allow-Headers` list
+        // headers["IDENTIFICATION_TOKEN"] = IDENTIFICATION_TOKEN;
     }
-    return axios(conf.url, {
-        headers: {
-            'Accept': 'application/json'
-        }
-    }).then((res) => {
+    return axios(conf.url, { headers }).then((res) => {
         return res.data;
     });
 };
 const post = (url, data) => {
-    if (DEBUG) {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(conf.response);
-            }, 1000);
-        });
-    }
     return axios.post(url, data, {
         headers: {
             'Content-Type': 'application/json'
         }
-    });
-};
-
-const TEMP_RANGE = [18, 24];
-
-const randomTemp = () => {
-    return parseFloat((TEMP_RANGE[0] + (Math.random() * (TEMP_RANGE[1] - TEMP_RANGE[0]))).toFixed(1));
-};
-
-const generateObservations = () => {
-    return ([...Array(10).keys()]).map((i, j) => {
-        return {
-            room: j + 1,
-            temperature: randomTemp()
-        };
-    });
-};
-const generateSystems = () => {
-    return ([...Array(10).keys()]).map((i, j) => {
-        return {
-            id: j + 1,
-            room: j + 1
-        };
     });
 };
 
@@ -100,7 +69,8 @@ export default {
             username: user,
             password
         }).then((res) => {
-            console.info(`authentication succeeded; cookie is ${res}`);
+            console.info(`authentication succeeded; identification token is`, res);
+            IDENTIFICATION_TOKEN = res;
         }, (e) => {
             console.error(`authentication failed; error: `, e);
             throw e;
@@ -109,8 +79,7 @@ export default {
     load() {
         return new Promise((resolve, reject) => {
             load({
-                url: CONFIG.systemsURL,
-                response: generateSystems()
+                url: CONFIG.systemsURL
             }).then((res) => {
                 return parser.parseSystems(res);
             }).then((systems) => {
