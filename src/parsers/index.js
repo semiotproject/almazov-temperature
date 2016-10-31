@@ -27,7 +27,7 @@ export default {
     },
     parseSystem(s) {
         let temperatureSensor = _.find(s["ssn:hasSubSystem"], (ss) => {
-            return ss["proto:hasPrototype"] === "https://raw.githubusercontent.com/semiotproject/semiot-drivers/master/dht22/src/main/resources/ru/semiot/platform/drivers/dht22/prototype.ttl#DHT22Device-TemperatureSensor"
+            return ss["proto:hasPrototype"] === "https://raw.githubusercontent.com/semiotproject/semiot-drivers/master/semiot-th-s/src/main/resources/ru/semiot/platform/drivers/semiot_th_s/prototype.ttl#SEMIOTTHSDevice-TemperatureSensor"
         });
         return {
             room: s["geo:location"]["http://schema.org/branchCode"],

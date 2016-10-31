@@ -6,7 +6,7 @@ const search = queryString.parse(location.search);
 if (search.platform) {
     platformHost = decodeURIComponent(search.platform);
 } else {
-    platformHost = "demo.semiot.ru";
+    platformHost = "localhost";
 }
 
 export default {
