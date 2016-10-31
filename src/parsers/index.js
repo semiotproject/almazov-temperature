@@ -18,7 +18,7 @@ function extractSystemFromAPIMessage(msg, index = -1) {
 export default {
     parseSystems(s) {
         return s['hydra:member'].filter((s) => {
-            return s["@type"] === "apidoc:DHT22Device";
+            return s["@type"] === "apidoc:SEMIOTTHSDevice";
         }).map((s, index) => {
             return {
                 uri: s['@id']
