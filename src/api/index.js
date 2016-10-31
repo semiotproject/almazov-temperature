@@ -57,7 +57,8 @@ const post = (url, data) => {
     return axios.post(url, data, {
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        withCredentials: true
     });
 };
 
