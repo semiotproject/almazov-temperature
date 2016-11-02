@@ -28,7 +28,7 @@ class SystemStore extends EventEmitter {
             this._data.forEach((d, index) => {
                 if (d.uri === uri) {
                     if (this._data[index].temperature) {
-                        this._data[index].prevTemperature = this._data.index.temperature;
+                        this._data[index].prevTemperature = this._data[index].temperature;
                     }
                     this._data[index].temperature = temperature;
                     this.emit("update");
