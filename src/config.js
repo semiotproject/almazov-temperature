@@ -11,7 +11,7 @@ if (search.platform) {
 
 export default {
     platformHost,
-    baseURL: '/almazov-temperature/',
+    baseURL: '/',
     systemsURL: `https://${platformHost}/systems?page=1&size=1000`,
     observationsURL: `https://${platformHost}/systems`,
     platformCredentials: {
