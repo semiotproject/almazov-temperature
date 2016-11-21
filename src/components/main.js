@@ -33,41 +33,49 @@ export default class Main extends React.Component {
 
     renderMin(data) {
         let min = {
-            temperature: Infinity
+            sensors: {
+                temperature: {
+                    value: Infinity
+                }
+            }
         };
         data.forEach((d) => {
-            if (d.temperature && d.temperature < min.temperature) {
+            if (d.sensors.temperature && d.sensors.temperature.value < min.sensors.temperature.value) {
                 min = d;
             }
         });
         return [
-            <span>{min.temperature} {String.fromCharCode("8451")}</span>,
+            <span>{min.sensors.temperature.value} {String.fromCharCode("8451")}</span>,
             <label>минимальная температура</label>,
             <label>в комнате № {min.room}</label>
         ];
     }
     renderAverage(data) {
         return (data.reduce((prev, next) => {
-            if (next.temperature) {
-                return prev + parseFloat(next.temperature);
+            if (next.sensors.temperature.value) {
+                return prev + parseFloat(next.sensors.temperature.value);
             } else {
                 return prev;
             }
         }, 0) / data.filter((s) => {
-            return s.temperature;
+            return s.sensors.temperature;
         }).length).toFixed(2);
     }
     renderMax(data) {
         let max = {
-            temperature: -Infinity
+            sensors: {
+                temperature: {
+                    value: -Infinity
+                }
+            }
         };
         data.forEach((d) => {
-            if (d.temperature && d.temperature > max.temperature) {
+            if (d.sensors.temperature && d.sensors.temperature.value > max.sensors.temperature.value) {
                 max = d;
             }
         });
         return [
-            <span>{max.temperature} {String.fromCharCode("8451")}</span>,
+            <span>{max.sensors.temperature.value} {String.fromCharCode("8451")}</span>,
             <label>максимальная температура</label>,
             <label>в комнате № {max.room}</label>
         ];

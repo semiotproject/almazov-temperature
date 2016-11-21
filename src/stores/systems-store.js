@@ -18,23 +18,33 @@ class SystemStore extends EventEmitter {
         return api.load().then((res) => {
             this._data = res;
             res.forEach((r) => {
-                this.subscribe(r.uri, r.topic);
-            });
+                this.subscribe(r);
+            })
             return res;
         });
     }
-    subscribe(uri, topic) {
-        api.subscribe(topic, ({ temperature }) => {
-            this._data.forEach((d, index) => {
-                if (d.uri === uri) {
-                    if (this._data[index].temperature) {
-                        this._data[index].prevTemperature = this._data[index].temperature;
-                    }
-                    this._data[index].temperature = temperature;
-                    this.emit("update");
-                }
+    subscribe(system) {
+        Object.keys(system.sensors).forEach((k) => {
+            const sensor = system.sensors[k];
+            console.debug(`subscribing to sensor: `, sensor);
+            api.subscribe(sensor.topic, ({ value }) => {
+                this._data.forEach((s, index) => {
+                    // if (s.uri === uri) {
+                    //     if (this._data[index].temperature) {
+                    //         this._data[index].prevTemperature = this._data[index].temperature;
+                    //     }
+                    //     this._data[index].temperature = temperature;
+                    //     this.emit("update");
+                    // }
+                });
             });
         });
+    }
+    addValue(sensor, value) {
+        if (sensor.value) {
+            sensor.prevValue = sensor.value;
+        }
+        sensor.value = value;
     }
     getData() {
         return this._data;

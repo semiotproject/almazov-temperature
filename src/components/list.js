@@ -31,9 +31,16 @@ export default class List extends React.Component {
         });
     }
     renderDynamic(d) {
-        if (d.prevTemperature) {
-            return d.temperature - d.prevTemperature > 0 ? String.fromCharCode("8593") : String.fromCharCode("8595");
+        if (d.prevValue) {
+            return d.value - d.prevValue > 0 ? String.fromCharCode("8593") : String.fromCharCode("8595");
         }
+    }
+    renderSensorValue(sensor) {
+        return (
+            <td>
+                {sensor.value || "неизвестно"} {this.renderDynamic(sensor)}
+            </td>
+        );
     }
 
     render() {
@@ -47,6 +54,7 @@ export default class List extends React.Component {
                         <tr>
                             <th>Комната</th>
                             <th>Температура, C</th>
+                            <th>Отн. влажность, %</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,7 +67,8 @@ export default class List extends React.Component {
                                 return (
                                     <tr>
                                         <td>{d.room}</td>
-                                        <td>{d.temperature || "неизвестно"} {this.renderDynamic(d)}</td>
+                                        {this.renderSensorValue(d.sensors.temperature)}
+                                        {this.renderSensorValue(d.sensors.humidity)}
                                     </tr>
                                 );
                             })

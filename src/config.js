@@ -1,12 +1,18 @@
 import queryString from 'query-string';
 
 let platformHost;
+let dateMargin;
 
 const search = queryString.parse(location.search);
 if (search.platform) {
     platformHost = decodeURIComponent(search.platform);
 } else {
     platformHost = "localhost";
+}
+if (search.dateMargin) {
+    dateMargin = decodeURIComponent(search.dateMargin);
+} else {
+    dateMargin = 10 * 60 * 60 * 1000; // last hour
 }
 
 export default {
@@ -17,6 +23,9 @@ export default {
     platformCredentials: {
         user: "root",
         password: "root"
+    },
+    observationsStartDate: () => {
+        return Date.now() - dateMargin;
     },
     authenticationURL: `https://${platformHost}/auth`,
     observationsTopic: ''

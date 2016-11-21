@@ -29,9 +29,14 @@ export default {
         let temperatureSensor = _.find(s["ssn:hasSubSystem"], (ss) => {
             return ss["proto:hasPrototype"] === "https://raw.githubusercontent.com/semiotproject/semiot-drivers/master/semiot-th-s/src/main/resources/ru/semiot/platform/drivers/semiot_th_s/prototype.ttl#SEMIOTTHSDevice-TemperatureSensor"
         });
+        let humiditySensor = _.find(s["ssn:hasSubSystem"], (ss) => {
+            return ss["proto:hasPrototype"] === "https://raw.githubusercontent.com/semiotproject/semiot-drivers/master/semiot-th-s/src/main/resources/ru/semiot/platform/drivers/semiot_th_s/prototype.ttl#SEMIOTTHSDevice-HumiditySensor"
+        });
         return {
+            uri: s["@id"],
             room: s["geo:location"]["http://schema.org/branchCode"],
-            temperatureSensorUri: temperatureSensor && temperatureSensor["@id"]
+            temperatureSensorUri: temperatureSensor && temperatureSensor["@id"],
+            humiditySensorUri: humiditySensor && humiditySensor["@id"]
         };
     },
     parseSensor(s) {
@@ -43,7 +48,7 @@ export default {
         const subscriptionOperation = hydraOperationRoot['hydra:operation'];
         parsedObs.topic = subscriptionOperation['hydra-pubsub:topic'];
         try {
-            parsedObs.temperature = obs["hydra:member"][0]["ssn:observationResult"]["ssn:hasValue"]["qudt:quantityValue"];
+            parsedObs.value = obs["hydra:member"][0]["ssn:observationResult"]["ssn:hasValue"]["qudt:quantityValue"];
         } catch (e) {
             console.error(e);
         }

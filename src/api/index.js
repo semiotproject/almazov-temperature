@@ -3,6 +3,7 @@ import Promise from 'bluebird';
 import CONFIG from '../config';
 import parser from '../parsers/';
 import _ from 'lodash';
+import moment from 'moment';
 
 const DEBUG = false;
 
@@ -36,7 +37,7 @@ wampConnection.open();
 
 function extractObservationFromWAMPMessage(msg) {
     return {
-        temperature: parseFloat(msg['ssn:observationResult']['ssn:hasValue']['qudt:quantityValue'])
+        value: parseFloat(msg['ssn:observationResult']['ssn:hasValue']['qudt:quantityValue'])
     };
 }
 
@@ -99,27 +100,44 @@ export default {
             load({
                 url: s.uri
             }).then((system) => {
-                console.info(`loaded detail info about ${s.uri}; loading temperature sensor..`);
                 const parsedSystem = parser.parseSystem(system);
-                load({
-                    url: parsedSystem.temperatureSensorUri
-                }).then((sensor) => {
-                    return parser.parseSensor(sensor);
-                }).then((parsedSensor) => {
-                    load({
-                        url: parsedSensor["apidoc:observations"]
-                    }).then((observation) => {
-                        return parser.parseObservation(observation);
-                    }).then((parsedObservation) => {
-                        resolve({
-                            uri: s.uri,
-                            room: parsedSystem.room,
-                            topic: parsedObservation.topic,
-                            temperature: parsedObservation.temperature
-                        });
+                console.info(`loaded detail info about ${s.uri}: `, parsedSystem);
+                Promise.all([
+                    this.loadSensor("humidity", parsedSystem.humiditySensorUri),
+                    this.loadSensor("temperature", parsedSystem.temperatureSensorUri)
+                ]).then((res) => {
+                    console.info(`all sensors loaded for system ${s.uri}: `, res);
+                    parsedSystem.sensors = {};
+                    res.map((r) => {
+                        parsedSystem.sensors[r.key] = {
+                            topic: r.topic,
+                            value: r.value
+                        };
                     });
-                })
+                    resolve(parsedSystem);
+                });
             })
+        });
+    },
+    loadSensor(key, url) {
+        return new Promise((resolve, reject) => {
+            load({
+                url
+            }).then((sensor) => {
+                return parser.parseSensor(sensor);
+            }).then((parsedSensor) => {
+                load({
+                    url: `${parsedSensor["apidoc:observations"]}`// ?start=${encodeURIComponent(moment(CONFIG.observationsStartDate()).format('YYYY-MM-DDTHH:mm:ssZ'))}`
+                }).then((observation) => {
+                    return parser.parseObservation(observation);
+                }).then((parsedObservation) => {
+                    resolve({
+                        key,
+                        topic: parsedObservation.topic,
+                        value: parsedObservation.value
+                    });
+                });
+            });
         });
     },
     subscribe(topic, callback) {
