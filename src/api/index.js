@@ -110,6 +110,7 @@ export default {
                     parsedSystem.sensors = {};
                     res.map((r) => {
                         parsedSystem.sensors[r.key] = {
+                            timestamp: r.timestamp,
                             topic: r.topic,
                             value: r.value
                         };
@@ -134,6 +135,7 @@ export default {
                     resolve({
                         key,
                         topic: parsedObservation.topic,
+                        timestamp: parsedObservation.timestamp,
                         value: parsedObservation.value
                     });
                 });

@@ -2,8 +2,7 @@ import React from 'react';
 import SystemStore from '../stores/systems-store';
 import CONFIG from '../config';
 
-import { Link } from 'react-router';
-import Header from './header';
+import moment from "moment";
 
 export default class List extends React.Component {
     constructor() {
@@ -35,40 +34,35 @@ export default class List extends React.Component {
             return d.value - d.prevValue > 0 ? String.fromCharCode("8593") : String.fromCharCode("8595");
         }
     }
-    renderSensorValue(sensor) {
+    renderSensorValue(sensor, units) {
         return (
             <td>
-                {sensor.value || "неизвестно"} {this.renderDynamic(sensor)}
+                {sensor.value || "неизвестно"} {units} {this.renderDynamic(sensor)}
             </td>
         );
     }
 
     render() {
-        const { param, asc } = this.props.location.query;
         return (
             <div className="list">
-                <Header />
-                <Link to={CONFIG.baseURL}>Назад</Link>
                 <table>
                     <thead>
                         <tr>
                             <th>Комната</th>
-                            <th>Температура, C</th>
-                            <th>Отн. влажность, %</th>
+                            <th>Температура</th>
+                            <th>Отн. влажность</th>
+                            <th>Последнее показание</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            this.sortBy(
-                                SystemStore.getData(),
-                                param,
-                                asc ? "asc" : "desc"
-                            ).map((d) => {
+                            SystemStore.getData().map((d, index) => {
                                 return (
-                                    <tr>
+                                    <tr key={index}>
                                         <td>{d.room}</td>
-                                        {this.renderSensorValue(d.sensors.temperature)}
-                                        {this.renderSensorValue(d.sensors.humidity)}
+                                        {this.renderSensorValue(d.sensors.temperature, String.fromCharCode("8451"))}
+                                        {this.renderSensorValue(d.sensors.humidity, "%")}
+                                        <td>{moment(d.sensors.temperature.timestamp).format('YYYY-MM-DD HH:mm:ss')}</td>
                                     </tr>
                                 );
                             })

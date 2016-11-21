@@ -29,13 +29,14 @@ class SystemStore extends EventEmitter {
             console.debug(`subscribing to sensor: `, sensor);
             api.subscribe(sensor.topic, ({ value }) => {
                 this._data.forEach((s, index) => {
-                    // if (s.uri === uri) {
-                    //     if (this._data[index].temperature) {
-                    //         this._data[index].prevTemperature = this._data[index].temperature;
-                    //     }
-                    //     this._data[index].temperature = temperature;
-                    //     this.emit("update");
-                    // }
+                    if (s.uri === system.uri) {
+                        if (sensor.value) {
+                            sensor.prevValue = sensor.value
+                        }
+                        sensor.value = value;
+                        sensor.timestamp = new Date();
+                        this.emit("update");
+                    }
                 });
             });
         });

@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 function extractSystemNameFromAPIMessage(msg) {
     return msg['rdfs:label'] ? msg['rdfs:label']['@value'] : msg['@id'];
 }
@@ -49,6 +51,7 @@ export default {
         parsedObs.topic = subscriptionOperation['hydra-pubsub:topic'];
         try {
             parsedObs.value = obs["hydra:member"][0]["ssn:observationResult"]["ssn:hasValue"]["qudt:quantityValue"];
+            parsedObs.timestamp = moment(obs["hydra:member"][0]["ssn:observationResultTime"]).toDate();
         } catch (e) {
             console.error(e);
         }

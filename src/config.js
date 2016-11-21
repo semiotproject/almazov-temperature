@@ -1,4 +1,7 @@
 import queryString from 'query-string';
+import moment from 'moment';
+
+moment.locale("ru");
 
 let platformHost;
 let dateMargin;
