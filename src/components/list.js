@@ -8,12 +8,20 @@ export default class List extends React.Component {
     constructor() {
         super();
         this.state = {
-
+            sortKey: "room"
         };
 
         this.handleUpdate = () => {
             this.forceUpdate();
-        }
+        };
+
+        this.handleSort = (key) => {
+            return () => {
+                this.setState({
+                    sortKey: key
+                });
+            };
+        };
     }
 
     componentDidMount() {
@@ -41,28 +49,53 @@ export default class List extends React.Component {
             </td>
         );
     }
+    renderTimestamp(timestamp) {
+        return (
+            <td style={{
+                color: Date.now() - timestamp > 1 * 60 * 60 * 1000 ? "red" : "black"
+            }}>{moment(timestamp).format('YYYY-MM-DD HH:mm:ss')}</td>
+        );
+    }
+    sort(data, key) {
+        return data.sort((a, b) => {
+            switch(key) {
+            case "room":
+                return a.room > b.room ? 1 : -1;
+            case "temperature":
+                return a.sensors.temperature.value > b.sensors.temperature.value ? 1 : -1;
+            case "humidity":
+                return a.sensors.humidity.value > b.sensors.humidity.value ? 1 : -1;
+            case "timestamp":
+                return a.sensors.temperature.timestamp > b.sensors.temperature.timestamp ? 1 : -1;
+            default:
+                return 1;
+            }
+        });
+    }
 
     render() {
+        const { data } = this.props;
+        const { sortKey } = this.state;
         return (
             <div className="list">
                 <table>
                     <thead>
                         <tr>
-                            <th>Комната</th>
-                            <th>Температура</th>
-                            <th>Отн. влажность</th>
-                            <th>Последнее показание</th>
+                            <th title="Отсортировать по комнате" onClick={this.handleSort("room")}>Комната</th>
+                            <th title="Отсортировать по температуре" onClick={this.handleSort("temperature")}>Температура</th>
+                            <th title="Отсортировать по влажности" onClick={this.handleSort("humidity")}>Отн. влажность</th>
+                            <th title="Отсортировать по времени последнего показания" onClick={this.handleSort("timestamp")}>Последнее показание</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            SystemStore.getData().map((d, index) => {
+                            this.sort(data, sortKey).map((d, index) => {
                                 return (
                                     <tr key={index}>
                                         <td>{d.room}</td>
                                         {this.renderSensorValue(d.sensors.temperature, String.fromCharCode("8451"))}
                                         {this.renderSensorValue(d.sensors.humidity, "%")}
-                                        <td>{moment(d.sensors.temperature.timestamp).format('YYYY-MM-DD HH:mm:ss')}</td>
+                                        {this.renderTimestamp(d.sensors.temperature.timestamp)}
                                     </tr>
                                 );
                             })

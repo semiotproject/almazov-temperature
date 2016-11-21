@@ -112,7 +112,8 @@ export default {
                         parsedSystem.sensors[r.key] = {
                             timestamp: r.timestamp,
                             topic: r.topic,
-                            value: r.value
+                            value: r.value,
+                            prevValue: r.prevValue
                         };
                     });
                     resolve(parsedSystem);
@@ -128,16 +129,33 @@ export default {
                 return parser.parseSensor(sensor);
             }).then((parsedSensor) => {
                 load({
-                    url: `${parsedSensor["apidoc:observations"]}`// ?start=${encodeURIComponent(moment(CONFIG.observationsStartDate()).format('YYYY-MM-DDTHH:mm:ssZ'))}`
+                    url: `${parsedSensor["apidoc:observations"]}&start=${encodeURIComponent(moment(CONFIG.observationsStartDate()).format('YYYY-MM-DDTHH:mm:ssZ'))}`
                 }).then((observation) => {
                     return parser.parseObservation(observation);
                 }).then((parsedObservation) => {
-                    resolve({
-                        key,
-                        topic: parsedObservation.topic,
-                        timestamp: parsedObservation.timestamp,
-                        value: parsedObservation.value
-                    });
+                    if (parsedObservation.value) {
+                        resolve({
+                            key,
+                            topic: parsedObservation.topic,
+                            timestamp: parsedObservation.timestamp,
+                            value: parsedObservation.value,
+                            prevValue: parsedObservation.prevValue
+                        });
+                    } else {
+                        console.warn(`not found observations from ${CONFIG.observationsStartDate()}; loading last observation..`);
+                        load({
+                            url: `${parsedSensor["apidoc:observations"]}`
+                        }).then((observation) => {
+                            return parser.parseObservation(observation);
+                        }).then((parsedObservation) => {
+                            resolve({
+                                key,
+                                topic: parsedObservation.topic,
+                                timestamp: parsedObservation.timestamp,
+                                value: parsedObservation.value
+                            });
+                        });
+                    }
                 });
             });
         });

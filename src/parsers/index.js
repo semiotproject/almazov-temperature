@@ -50,8 +50,13 @@ export default {
         const subscriptionOperation = hydraOperationRoot['hydra:operation'];
         parsedObs.topic = subscriptionOperation['hydra-pubsub:topic'];
         try {
-            parsedObs.value = obs["hydra:member"][0]["ssn:observationResult"]["ssn:hasValue"]["qudt:quantityValue"];
-            parsedObs.timestamp = moment(obs["hydra:member"][0]["ssn:observationResultTime"]).toDate();
+            const entries = obs["hydra:member"].sort((a, b) => { 
+                return moment(a["ssn:observationResultTime"]).toDate().getTime() - moment(b["ssn:observationResultTime"]).toDate().getTime() > 0 ? -1 : 1; 
+            });
+            console.warn(entries);
+            parsedObs.value = entries[0]["ssn:observationResult"]["ssn:hasValue"]["qudt:quantityValue"];
+            parsedObs.timestamp = moment(entries[0]["ssn:observationResultTime"]).toDate();
+            parsedObs.prevValue = entries[1]["ssn:observationResult"]["ssn:hasValue"]["qudt:quantityValue"];
         } catch (e) {
             console.error(e);
         }

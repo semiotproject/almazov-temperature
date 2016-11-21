@@ -15,7 +15,7 @@ if (search.platform) {
 if (search.dateMargin) {
     dateMargin = decodeURIComponent(search.dateMargin);
 } else {
-    dateMargin = 10 * 60 * 60 * 1000; // last hour
+    dateMargin = 4 * 60 * 60 * 1000; // last hour
 }
 
 export default {
