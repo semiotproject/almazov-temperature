@@ -53,7 +53,7 @@ export default class List extends React.Component {
         return (
             <td style={{
                 color: Date.now() - timestamp > 1 * 60 * 60 * 1000 ? "red" : "black"
-            }}>{moment(timestamp).format('YYYY-MM-DD HH:mm:ss')}</td>
+            }}>{moment(timestamp).format('MM-DD HH:mm:ss')}</td>
         );
     }
     sort(data, key) {
@@ -83,8 +83,8 @@ export default class List extends React.Component {
                         <tr>
                             <th title="Отсортировать по комнате" onClick={this.handleSort("room")}>Комната</th>
                             <th title="Отсортировать по температуре" onClick={this.handleSort("temperature")}>Температура</th>
-                            <th title="Отсортировать по влажности" onClick={this.handleSort("humidity")}>Отн. влажность</th>
-                            <th title="Отсортировать по времени последнего показания" onClick={this.handleSort("timestamp")}>Последнее показание</th>
+                            <th title="Отсортировать по влажности" onClick={this.handleSort("humidity")}>Влажность</th>
+                            <th title="Отсортировать по времени последнего показания" onClick={this.handleSort("timestamp")}>Время</th>
                         </tr>
                     </thead>
                     <tbody>

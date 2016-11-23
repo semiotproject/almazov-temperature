@@ -77,7 +77,7 @@ a {
     padding: 0 5%;
     div {
         display: inline-block;
-        width: 30%;
+        width: 27.5%;
         text-align: center;
         font-size: 2vw;
         padding: 40px 30px;
@@ -87,13 +87,13 @@ a {
         vertical-align: middle;
     }
     div&__average {
-        width: 40%;
+        width: 45%;
         padding: 90px 20px;
         .dashboard-mixin(darken(gray, 20%));
         background: linear-gradient(90deg, @blue, @red);
         font-size: 3vw;
         label {
-            font-size: 1vw;
+            font-size: 1.5vw;
         }
     }
     &__min {
@@ -109,7 +109,7 @@ a {
     label {
         text-align: center;
         display: block;
-        font-size: .8vw;
+        font-size: 1vw;
     }
 }
 
@@ -130,7 +130,7 @@ a {
         }
         tr {
             > * {
-                padding: 10px;
+                padding: 20px;
             }
             &:nth-child(odd) {
                 td {
@@ -152,9 +152,6 @@ a {
             background-color: rgba(0,0,0,.1);
             transition: all .1s ease-in-out;
         }
-        td {
-            font-size: 12px;
-        }
         thead th {
             cursor: pointer;
             &:hover {
@@ -173,11 +170,12 @@ a {
             margin-bottom: 10px;
         }
         h2 {
-            font-size: 3vh;
+            font-size: 3vw;
         }
         h3 {
-            font-size: 2vh;
+            font-size: 2vw;
         }
+        margin-top: 20px;
         margin-bottom: 40px;
     }
     .main-content > div {
@@ -188,30 +186,36 @@ a {
         div {
             display: block;
             margin: 0 auto;
-            font-size: 4vh;
+            font-size: 7vw;
             width: 70%;
             padding: 60px 0;
         }
         .dashboard__average {
             background: linear-gradient(180deg, @blue, @red);
-            font-size: 7vh;
+            font-size: 10vw;
             width: 90%;
             padding: 100px 0;
+            label {
+                font-size: 5vw;
+            }
         }
         label {
-            font-size: 2vh;
+            font-size: 4vw;
         }
     }
     .list {
         margin: 50px 0;
-        a {
-            font-size: 3vh;
-            margin-bottom: 1vh;
-        }
         table {
             margin-top: 30px;
             width: 90%;
-            font-size: 2vh;
+            font-size: 3.5vw;
+            th, 
+            td {
+                padding: 20px 10px;
+            }
+            td {
+                font-size: 3.5vw;
+            }
         }
     }
 
